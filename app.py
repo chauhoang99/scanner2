@@ -122,25 +122,30 @@ def fetch_data(ticker, period, interval):
         return None
 
 
-def get_score_time_series(df, trend_mode_val, reversed_flag):
-    if df is None or len(df) < 3:
+def get_score_time_series(df, trend_mode_val, reversed_flag, timeframe):
+    if df is None or len(df) < 4:
         return pd.DataFrame()
     
+    # If using intraday timeframes, the last row from yfinance is usually the live/in-progress candle.
+    # We drop the last row so all calculations are based strictly on closed candles.
+    work_df = df.copy()
+    if timeframe in ["60m", "30m", "15m", "5m", "1m"]:
+        work_df = work_df.iloc[:-1]
+        
     scores = []
     dates = []
-    for i in range(2, len(df)):
-        p_open = df["Open"].iloc[i-1]
-        p_high = df["High"].iloc[i-1]
-        p_low = df["Low"].iloc[i-1]
-        p_close = df["Close"].iloc[i-1]
-        c_close = df["Close"].iloc[i]
+    for i in range(2, len(work_df)):
+        p_open = work_df["Open"].iloc[i-1]
+        p_high = work_df["High"].iloc[i-1]
+        p_low = work_df["Low"].iloc[i-1]
+        p_close = work_df["Close"].iloc[i-1]
+        c_close = work_df["Close"].iloc[i]
         
         score = _compute_single_score(p_open, p_high, p_low, p_close, c_close, trend_mode_val, reversed_flag)
         scores.append(score)
-        dates.append(df.index[i])
+        dates.append(work_df.index[i])
         
     return pd.DataFrame({'Date': dates, 'Score': scores})
-
 
 def calculate_next_score_probabilities(score_df, n_back=3):
     if score_df.empty or len(score_df) <= n_back:
