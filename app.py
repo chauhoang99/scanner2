@@ -189,19 +189,28 @@ def get_all_patterns_summary(score_df, n_back=3):
     for pattern, subsequent in pattern_transitions.items():
         total_occurrences = len(subsequent)
         counts = Counter(subsequent)
-        most_common_next, most_common_count = counts.most_common(1)[0]
-        most_common_pct = (most_common_count / total_occurrences) * 100
+        top_3 = counts.most_common(3)
         
-        summary_data.append({
+        row = {
             "Pattern Sequence": " → ".join(map(str, pattern)),
             "Total Sample Occurrences": total_occurrences,
-            "Most Common Next Score": most_common_next,
-            "Most Common Probability": f"{most_common_pct:.1f}%"
-        })
+        }
+        
+        # Populate up to the top 3 most common next scores
+        for idx, (score_val, count) in enumerate(top_3):
+            pct = (count / total_occurrences) * 100
+            row[f"Top {idx+1} Score"] = score_val
+            row[f"Top {idx+1} Prob"] = f"{pct:.1f}%"
+        
+        # Fill placeholders if a pattern has fewer than 3 unique subsequent outcomes
+        for idx in range(len(top_3), 3):
+            row[f"Top {idx+1} Score"] = "-"
+            row[f"Top {idx+1} Prob"] = "-"
+            
+        summary_data.append(row)
         
     summary_df = pd.DataFrame(summary_data)
     return summary_df.sort_values(by="Total Sample Occurrences", ascending=False)
-
 
 # ---------------------------------------------------------
 # MAIN DASHBOARD UI
