@@ -215,7 +215,7 @@ df = fetch_data(symbol, history_period, timeframe)
 if df is None or df.empty:
     st.error(f"Could not retrieve data for ticker '{symbol}'. Please check the symbol and try again.")
 else:
-    score_history = get_score_time_series(df, trend_mode, reversed_flag)
+    score_history = get_score_time_series(df, trend_mode, reversed_flag, timeframe)
     
     if score_history.empty:
         st.warning("Not enough historical data points to generate scores.")
