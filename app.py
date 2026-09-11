@@ -52,7 +52,7 @@ reversed_flag = st.sidebar.checkbox("Reverse Score Direction", value=False, help
 
 st.sidebar.subheader("Timeframe & History")
 timeframe = st.sidebar.selectbox("Timeframe", ["60m", "1d", "1wk", "1mo", "3mo"], index=1)
-history_period = st.sidebar.selectbox("History Range", ["1y", "2y", "5y", "10y", "max"], index=1)
+history_period = st.sidebar.selectbox("History Range", ["1y", "2y", "5y", "10y", "max"], index=2)
 
 lookback_n = st.sidebar.slider("Pattern Lookback Window (Scores)", min_value=1, max_value=5, value=2, help="Number of past consecutive scores to match historically.")
 
