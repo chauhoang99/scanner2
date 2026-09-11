@@ -54,7 +54,7 @@ st.sidebar.subheader("Timeframe & History")
 timeframe = st.sidebar.selectbox("Timeframe", ["60m", "1d", "1wk", "1mo", "3mo"], index=1)
 history_period = st.sidebar.selectbox("History Range", ["1y", "2y", "5y", "10y", "max"], index=1)
 
-lookback_n = st.sidebar.slider("Pattern Lookback Window (Scores)", min_value=1, max_value=5, value=3, help="Number of past consecutive scores to match historically.")
+lookback_n = st.sidebar.slider("Pattern Lookback Window (Scores)", min_value=1, max_value=5, value=2, help="Number of past consecutive scores to match historically.")
 
 # 3. Option to show all patterns
 show_all_patterns = st.sidebar.checkbox("Show All Historical Patterns Summary", value=False)
